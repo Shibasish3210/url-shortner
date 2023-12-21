@@ -2,23 +2,25 @@ import jwt from 'jsonwebtoken';
 
 
 export const createUserToken = (user)=>{
-    console.log(process.env.jwtSecret)
+    //creating a new user token which will be used to login later
     const token = jwt.sign({...user}, process.env.jwtSecret);
     
-    return token;
+    return token;//returning a new user token
 }
 
 export const validateToken = (token) => {
-    console.log(process.env.jwtSecret)
-    let user;
+    let user; // declaration of user 
     jwt.verify(token, process.env.jwtSecret, (err, decoded)=>{
         if(err){
+            //if verification failed then setting user as null
             user = null;
-            console.log(err,1);
             return;
         }
 
+        //setting user as the decoded value if the token is verified
         user = decoded;
     });
+
+    //returning user
     return user;
 }
