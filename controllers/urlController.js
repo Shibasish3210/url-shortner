@@ -1,23 +1,28 @@
 import { nanoid } from "nanoid";
 import UrlDB from "../schema/urlSchema.js";
+import { checkIfURLExists } from "../model/urlModel.js";
 
 export const urlShorteningConroller = async (req, res)=>{
     const BASE = process.env.Base;
-    console.log(BASE,0);
     let { url } = req.body;
     if( !url ) return res.status(400).send({message: 'url is required'});
 
     if(url.includes('https://')){
         url = url.slice(8);
     }
-    const storedUrl = await UrlDB.findOne({originalUrl: url});
+    if(url.includes('http://')){
+        url = url.slice(7);
+    }
+    //checking if The actual URL is present in the db
+    const storedUrl = await checkIfURLExists();
 
     if(storedUrl){
+        //if present sending response
         return res.status(200).send({
             originalURL: storedUrl.originalURL,
             shortURL: storedUrl.shortURL,
-        })
-    } 
+        }) 
+    }
 
     const urlID = nanoid(8);
     const urlObj = {
