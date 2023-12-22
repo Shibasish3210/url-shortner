@@ -1,4 +1,3 @@
-import UrlDB from "../schema/urlSchema.js";
 import { checkIfURLExists, checkIfURLExistsByShortID, createURLObjAndSave } from "../model/urlModel.js";
 import { validateURLShortening } from "../util/cleanUpAndValidate.js";
 
@@ -10,7 +9,6 @@ export const urlShorteningConroller = async (req, res)=>{
     try {
         // destructuring the array if the url validation promise is fulfilled
         let [ newUrl, newProtocol ] = await validateURLShortening(actualURL);
-        
         //setting the newURl and protocol value to be accessible outside this try block
         url = newUrl,
         protocol = newProtocol;
@@ -21,7 +19,7 @@ export const urlShorteningConroller = async (req, res)=>{
 
     console.log(url, protocol);
     //checking if The actual URL is present in the db
-    const storedUrl = await checkIfURLExists();
+    const storedUrl = await checkIfURLExists(url);
 
     if(storedUrl){
         //if present sending response

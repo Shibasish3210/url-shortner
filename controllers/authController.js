@@ -41,6 +41,8 @@ export const registrationController = async (req, res)=>{
 
 export const loginController = async (req, res)=>{
     const {username, password} = req.body;//extracting the username and password out of the req body
+    //return missing credentials if any of the credentials is missing
+    if(!username || !password) return res.status(400).send({message:`Missing credentials`});
     try {
         const user = await usernameExist(username);//checking if user Exists
 
